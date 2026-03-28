@@ -4,119 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelly Timer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-image: url('Kelly_and_me.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-            min-height: 100vh;
-            position: relative;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .content {
-            z-index: 10;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 3em;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-        .timer-container {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        .timer-unit {
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border-radius: 10px;
-            min-width: 120px;
-        }
-        .timer-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .timer-label {
-            font-size: 1em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .subtitle {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-    </style>
 </head>
 <body>
-    <div class="overlay">
-        <div class="content">
-            <h1>Since We Started Dating</h1>
-            <p class="subtitle">Time Together</p>
-            <div class="timer-container">
-                <div class="timer-unit">
-                    <span class="timer-number" id="days">0</span>
-                    <span class="timer-label">Days</span>
-                </div>
-                <div class="timer-unit">
-                    <span class="timer-number" id="hours">0</span>
-                    <span class="timer-label">Hours</span>
-                </div>
-                <div class="timer-unit">
-                    <span class="timer-number" id="minutes">0</span>
-                    <span class="timer-label">Minutes</span>
-                </div>
-                <div class="timer-unit">
-                    <span class="timer-number" id="seconds">0</span>
-                    <span class="timer-label">Seconds</span>
-                </div>
-            </div>
-        </div>
+    <div id="timer-display">
+        <h1>Timer Display</h1>
+        <!-- Timer functionality here -->
     </div>
-
-    <script>
-        const startDate = new Date('2025-12-15T19:20:00').getTime();
-
-        function updateTimer() {
-            const now = new Date().getTime();
-            const elapsed = now - startDate;
-
-            const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-        }
-
-        updateTimer();
-        setInterval(updateTimer, 1000);
-    </script>
+    <h1>Since We Started Dating</h1> <!-- Moved this line to the bottom -->
 </body>
 </html>
