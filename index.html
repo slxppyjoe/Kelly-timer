@@ -4,18 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelly Timer</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        #timer {
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.5em;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <div class="timer-container">
-                <p>Timer goes here...</p>
-            </div>
-            <!-- h1 moved to the bottom of the content div -->
-            <h1 class="title">Since We Started Dating</h1>
-        </div>
+    <div id="timer">
+        <h1>Time Since We Started Dating</h1>
+        <h2 id="time-display">00:00:00</h2>
+        <h2>Since We Started Dating</h2>
     </div>
-    <script src="script.js"></script>
+    <script>
+        const startTime = new Date('2020-01-01T00:00:00Z'); // Change to the actual date
+        const timeDisplay = document.getElementById('time-display');
+
+        function updateTimer() {
+            const now = new Date();
+            const diff = Math.floor((now - startTime) / 1000);
+            const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+            const seconds = String(diff % 60).padStart(2, '0');
+            timeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
 </body>
 </html>
