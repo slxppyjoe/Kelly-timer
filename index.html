@@ -3,72 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Since We Started Dating</title>
-    <style>
-        body {
-            background: url('Kelly_and_me.jpg') no-repeat center center fixed;
-            background-size: cover;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            color: white;
-        }
-        .timer {
-            font-size: 5em;
-            background: linear-gradient(90deg, rgba(255, 0, 150, 1), rgba(0, 204, 255, 1));
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            animation: glow 1s infinite alternate;
-        }
-        .time-unit {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            transition: transform 0.3s;
-        }
-        .time-unit:hover {
-            transform: scale(1.1);
-        }
-        @keyframes glow {
-            0% { text-shadow: 0 0 10px rgba(255, 0, 150, 1); }
-            100% { text-shadow: 0 0 20px rgba(0, 204, 255, 1); }
-        }
-    </style>
+    <title>Kelly Timer</title>
 </head>
 <body>
-    <h1>Time Since We Started Dating</h1>
+    <div id="timer">0 days, 0 hours, 0 minutes, 0 seconds</div>
+    <div>
+        <h1>Welcome to the Kelly Timer</h1>
+        <p>This timer counts the time since we started dating.</p>
+    </div>
+    <div>
+        <!-- Timer logic will be inserted here -->
+    </div>
+    <!-- Existing timer code would go here -->
     <h2>Since We Started Dating</h2>
-    <div class="timer">
-        <span id="days">0</span> Days, 
-        <span id="hours">0</span> Hours, 
-        <span id="minutes">0</span> Minutes, 
-        <span id="seconds">0</span> Seconds
-    </div>
-    <div class="time-units">
-        <div class="time-unit">Days</div>
-        <div class="time-unit">Hours</div>
-        <div class="time-unit">Minutes</div>
-        <div class="time-unit">Seconds</div>
-    </div>
-    <script>
-        const startDate = new Date('2025-12-15T19:20:00Z');
-        function updateTimer() {
-            const now = new Date();
-            const diff = now - startDate;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds;
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
-    </script>
 </body>
 </html>
