@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Journey</title>
+    <title>Count-Up Timer</title>
     <style>
         body {
             background: url('Kelly_and_me.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
             text-align: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,56 +18,54 @@
             margin: 0;
         }
         #timer {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            width: 80%;
-            max-width: 500px;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: fit-content;
+            max-width: 90%;
         }
         #time {
-            font-size: clamp(2rem, 8vw, 3.5rem); /* Responsive font size */
-            font-weight: 700;
+            /* This ensures everything stays on one line */
+            font-size: clamp(1.8rem, 6vw, 4rem); 
+            font-weight: bold;
             margin: 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            white-space: nowrap; 
         }
-        p {
+        #timer p {
             font-size: 1.2rem;
             margin-top: 15px;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
     <div id="timer">
-        <div id="time">00d 00h 00m 00s</div>
+        <h2 id="time">00d 00h 00m 00s</h2>
         <p>Since we started dating</p>
     </div>
-
     <script>
-        // Note: Months are 0-indexed (11 = December)
-        const startDate = new Date(2025, 11, 15, 19, 20, 0);
+        // Using a string format helps the browser handle Daylight Savings correctly
+        // Format: YYYY-MM-DDTHH:MM:SS (Note: December is 12 here, not 11)
+        const startDate = new Date("2025-12-15T19:20:00");
 
         function updateTimer() {
             const now = new Date();
-            const diff = now - startDate;
+            const distance = now - startDate;
 
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const m = Math.floor((diff / 1000 / 60) % 60);
-            const s = Math.floor((diff / 1000) % 60);
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Pad with leading zeros for a cleaner look
-            const displayH = h.toString().padStart(2, '0');
-            const displayM = m.toString().padStart(2, '0');
-            const displayS = s.toString().padStart(2, '0');
+            // Padding with '0' ensures the text width stays consistent
+            const h = hours.toString().padStart(2, '0');
+            const m = minutes.toString().padStart(2, '0');
+            const s = seconds.toString().padStart(2, '0');
 
-            document.getElementById('time').innerText = `${d}d ${displayH}h ${displayM}m ${displayS}s`;
+            document.getElementById('time').innerHTML = `${days}d ${h}h ${m}m ${s}s`;
         }
 
         setInterval(updateTimer, 1000);
