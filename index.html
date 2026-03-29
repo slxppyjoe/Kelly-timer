@@ -18,6 +18,7 @@
             margin: 0;
             overflow: hidden;
         }
+
         #timer {
             background-color: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
@@ -27,7 +28,18 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             width: fit-content;
             max-width: 90%;
+            
+            /* The Heartbeat Animation */
+            animation: heartbeat 1s infinite ease-in-out;
         }
+
+        /* Defining the pulse effect */
+        @keyframes heartbeat {
+            0% { transform: scale(1); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+            50% { transform: scale(1.02); box-shadow: 0 10px 50px rgba(255, 255, 255, 0.2); }
+            100% { transform: scale(1); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+        }
+
         #time {
             font-size: clamp(1.8rem, 8vw, 4rem); 
             font-weight: bold;
@@ -36,6 +48,7 @@
             letter-spacing: 1px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
+
         p {
             font-size: 1.2rem;
             margin-top: 15px;
@@ -57,24 +70,19 @@
 
         function updateTimer() {
             const now = new Date();
-            
-            // Calculate millisecond difference
             let distance = now - startDate;
 
-            // DST Correction: Adjusts for the 1-hour shift between seasons
+            // DST Correction
             const offsetNow = now.getTimezoneOffset();
             const offsetStart = startDate.getTimezoneOffset();
             const dstAdjustment = (offsetNow - offsetStart) * 60 * 1000;
-            
             distance -= dstAdjustment;
 
-            // Unit conversion
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Leading zeros for layout stability
             const h = hours.toString().padStart(2, '0');
             const m = minutes.toString().padStart(2, '0');
             const s = seconds.toString().padStart(2, '0');
