@@ -10,67 +10,68 @@
             background-size: cover;
             color: white;
             text-align: center;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: flex-end; 
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            padding-bottom: 50px; 
+            padding-bottom: 60px; 
         }
 
         #timer {
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 40px;
-            border-radius: 30px;
+            border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             width: fit-content;
             max-width: 90%;
-            position: relative; /* Needed for floating hearts */
+            position: relative;
             animation: heartbeat 2s infinite ease-in-out;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @keyframes heartbeat {
             0% { transform: scale(1); }
-            50% { transform: scale(1.015); box-shadow: 0 10px 50px rgba(255, 182, 193, 0.2); }
+            50% { transform: scale(1.015); box-shadow: 0 10px 50px rgba(255, 255, 255, 0.15); }
             100% { transform: scale(1); }
         }
 
         #time {
             font-size: clamp(1.8rem, 8vw, 4rem); 
-            font-weight: 700;
+            font-weight: bold;
             margin: 0;
             white-space: nowrap; 
             letter-spacing: 1px;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-top: 15px;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            opacity: 0.8;
-            font-weight: 300;
+            opacity: 0.9;
         }
 
-        /* Floating Heart Styles */
-        .heart {
+        .snoopy {
             position: absolute;
-            color: rgba(255, 182, 193, 0.7);
-            font-size: 20px;
+            width: 50px;
+            height: auto;
             user-select: none;
             pointer-events: none;
-            animation: floatUp 4s linear forwards;
+            animation: floatUp 5s linear forwards;
+            z-index: -1; /* Floats behind the text */
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-150px) scale(1.5); opacity: 0; }
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-250px) rotate(15deg); opacity: 0; }
         }
     </style>
 </head>
@@ -105,23 +106,21 @@
 
             document.getElementById('time').innerHTML = `${days}d ${h}h ${m}m ${s}s`;
 
-            // Romantic addition: Create a floating heart every 2 seconds
-            if (seconds % 2 === 0 && !document.querySelector(`.heart-s-${seconds}`)) {
-                createHeart(seconds);
+            // Create Snoopy every 3 seconds
+            if (seconds % 3 === 0 && !document.querySelector(`.snoopy-s-${seconds}`)) {
+                createSnoopy(seconds);
             }
         }
 
-        function createHeart(id) {
+        function createSnoopy(id) {
             const timer = document.getElementById('timer');
-            const heart = document.createElement('div');
-            heart.classList.add('heart', `heart-s-${id}`);
-            heart.innerHTML = '❤';
-            // Randomly position heart across the width of the box
-            heart.style.left = Math.random() * 80 + 10 + '%';
-            timer.appendChild(heart);
-            
-            // Clean up heart after animation ends
-            setTimeout(() => heart.remove(), 4000);
+            const snoopy = document.createElement('img');
+            snoopy.classList.add('snoopy', `snoopy-s-${id}`);
+            // Transparent Dancing Snoopy
+            snoopy.src = 'https://media.giphy.com';
+            snoopy.style.left = Math.random() * 70 + 15 + '%';
+            timer.appendChild(snoopy);
+            setTimeout(() => snoopy.remove(), 5000);
         }
 
         setInterval(updateTimer, 1000);
