@@ -10,76 +10,101 @@
             background-size: cover;
             color: white;
             text-align: center;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: flex-end; 
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            padding-bottom: 60px; 
+            padding-bottom: 40px; 
+        }
+
+        #container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Peeking Snoopy Logic */
+        #snoopy-peeker {
+            width: 150px; /* Big Snoopy */
+            position: absolute;
+            bottom: 80%; /* Start behind the box */
+            z-index: 0; /* Behind the timer */
+            animation: peekaboo 6s infinite ease-in-out;
+        }
+
+        @keyframes peekaboo {
+            0%, 10%, 90%, 100% { transform: translateY(100%); } /* Fully hidden */
+            20%, 80% { transform: translateY(10%); } /* Peeking out */
         }
 
         #timer {
             background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 35px 50px;
+            border-radius: 30px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             width: fit-content;
             max-width: 90%;
             position: relative;
             animation: heartbeat 2s infinite ease-in-out;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1; /* Sits in front of Snoopy */
         }
 
         @keyframes heartbeat {
             0% { transform: scale(1); }
-            50% { transform: scale(1.015); box-shadow: 0 10px 50px rgba(255, 255, 255, 0.15); }
+            50% { transform: scale(1.02); box-shadow: 0 10px 50px rgba(255, 182, 193, 0.3); }
             100% { transform: scale(1); }
         }
 
         #time {
             font-size: clamp(1.8rem, 8vw, 4rem); 
-            font-weight: bold;
+            font-weight: 700;
             margin: 0;
             white-space: nowrap; 
             letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
 
         p {
-            font-size: 1.2rem;
-            margin-top: 15px;
+            font-size: 1.1rem;
+            margin-top: 10px;
             letter-spacing: 2px;
             text-transform: uppercase;
-            opacity: 0.9;
+            opacity: 0.8;
         }
 
-        .snoopy {
+        .heart {
             position: absolute;
-            width: 50px;
-            height: auto;
+            color: rgba(255, 182, 193, 0.8);
+            font-size: 24px;
             user-select: none;
             pointer-events: none;
-            animation: floatUp 5s linear forwards;
-            z-index: -1; /* Floats behind the text */
+            animation: floatUp 4s linear forwards;
+            z-index: 2; /* Hearts float in front of everything */
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-250px) rotate(15deg); opacity: 0; }
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-250px) scale(1.5); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div id="timer">
-        <h2 id="time">00d 00h 00m 00s</h2>
-        <p>Since we started dating</p>
+    <div id="container">
+        <!-- The Peeking Snoopy -->
+        <img id="snoopy-peeker" src="https://media.giphy.com" alt="Snoopy Peeking">
+        
+        <div id="timer">
+            <h2 id="time">00d 00h 00m 00s</h2>
+            <p>Since we started dating</p>
+        </div>
     </div>
 
     <script>
@@ -106,21 +131,19 @@
 
             document.getElementById('time').innerHTML = `${days}d ${h}h ${m}m ${s}s`;
 
-            // Create Snoopy every 3 seconds
-            if (seconds % 3 === 0 && !document.querySelector(`.snoopy-s-${seconds}`)) {
-                createSnoopy(seconds);
+            if (seconds % 2 === 0 && !document.querySelector(`.heart-s-${seconds}`)) {
+                createHeart(seconds);
             }
         }
 
-        function createSnoopy(id) {
-            const timer = document.getElementById('timer');
-            const snoopy = document.createElement('img');
-            snoopy.classList.add('snoopy', `snoopy-s-${id}`);
-            // Transparent Dancing Snoopy
-            snoopy.src = 'https://media.giphy.com';
-            snoopy.style.left = Math.random() * 70 + 15 + '%';
-            timer.appendChild(snoopy);
-            setTimeout(() => snoopy.remove(), 5000);
+        function createHeart(id) {
+            const container = document.getElementById('container');
+            const heart = document.createElement('div');
+            heart.classList.add('heart', `heart-s-${id}`);
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 80 + 10 + '%';
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
         }
 
         setInterval(updateTimer, 1000);
