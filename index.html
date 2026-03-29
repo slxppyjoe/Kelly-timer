@@ -3,73 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Count-Up Timer</title>
+    <title>Our Journey</title>
     <style>
         body {
+            /* Ensure the image name matches your file exactly */
             background: url('Kelly_and_me.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
             text-align: center;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
+
         #timer {
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            /* Glassmorphism effect: Blurs the photo behind the box */
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             width: fit-content;
             max-width: 90%;
         }
+
         #time {
-            /* This ensures everything stays on one line */
-            font-size: clamp(1.8rem, 6vw, 4rem); 
-            font-weight: bold;
+            /* Responsive font: Big on desktop, scales down for mobile */
+            font-size: clamp(1.8rem, 7vw, 4rem);
+            font-weight: 700;
             margin: 0;
+            white-space: nowrap; /* Forces everything on one line */
             letter-spacing: 1px;
-            white-space: nowrap; 
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
         }
-        #timer p {
-            font-size: 1.2rem;
+
+        p {
+            font-size: clamp(1rem, 4vw, 1.5rem);
             margin-top: 15px;
-            letter-spacing: 1px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
     </style>
 </head>
 <body>
+
     <div id="timer">
-        <h2 id="time">00d 00h 00m 00s</h2>
+        <div id="time">00d 00h 00m 00s</div>
         <p>Since we started dating</p>
     </div>
+
     <script>
-        // Using a string format helps the browser handle Daylight Savings correctly
-        // Format: YYYY-MM-DDTHH:MM:SS (Note: December is 12 here, not 11)
-        const startDate = new Date("2025-12-15T19:20:00");
+        /**
+         * UNIVERSAL TIME CONFIGURATION
+         * We use UTC to ensure the timer is never affected by Daylight Savings shifts.
+         * Date.UTC(Year, MonthIndex, Day, Hour, Minute, Second)
+         * NOTE: Months are 0-indexed (0=Jan, 11=Dec)
+         */
+        const startDate = Date.UTC(2025, 11, 15, 19, 20, 0);
 
         function updateTimer() {
-            const now = new Date();
+            // Get current universal time
+            const now = Date.now();
+            
+            // Calculate the absolute difference in milliseconds
             const distance = now - startDate;
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            // Math for Days, Hours, Minutes, Seconds
+            const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Padding with '0' ensures the text width stays consistent
-            const h = hours.toString().padStart(2, '0');
-            const m = minutes.toString().padStart(2, '0');
-            const s = seconds.toString().padStart(2, '0');
+            // Pad numbers with a leading zero (e.g., "05s") to prevent the text from jumping
+            const displayH = h.toString().padStart(2, '0');
+            const displayM = m.toString().padStart(2, '0');
+            const displayS = s.toString().padStart(2, '0');
 
-            document.getElementById('time').innerHTML = `${days}d ${h}h ${m}m ${s}s`;
+            // Update the display
+            document.getElementById('time').innerText = `${d}d ${displayH}h ${displayM}m ${displayS}s`;
         }
 
+        // Run every second
         setInterval(updateTimer, 1000);
+        
+        // Run immediately on load
         updateTimer();
     </script>
+
 </body>
 </html>
