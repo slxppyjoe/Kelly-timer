@@ -6,7 +6,6 @@
     <title>Our Journey</title>
     <style>
         body {
-            /* Case-sensitive check for Kelly_and_me2.jpg */
             background: url('Kelly_and_me2.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
@@ -18,7 +17,7 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            padding-bottom: 40px; 
+            padding-bottom: 40px;
         }
 
         #container {
@@ -26,37 +25,38 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 10;
+            /* Creates a new stacking context for children */
+            z-index: 1; 
         }
 
-        /* Peeking Snoopy */
+        /* Snoopy: Bigger and strictly layered */
         #snoopy-peeker {
-            width: 160px; /* Big Snoopy */
+            width: 180px; 
             position: absolute;
-            bottom: 60%; /* Position behind the box */
-            z-index: -1; /* Place him behind the timer */
-            animation: peekaboo 7s infinite ease-in-out;
+            bottom: 40px; /* Aligned with the top of the timer */
+            z-index: 2; /* Layer 2: Middle (Behind text, in front of photo) */
+            animation: peekaboo 6s infinite ease-in-out;
             pointer-events: none;
         }
 
         @keyframes peekaboo {
-            0%, 15%, 85%, 100% { transform: translateY(110%); } /* Hidden */
-            30%, 70% { transform: translateY(0%); } /* Peeking up */
+            0%, 15%, 85%, 100% { transform: translateY(110%); } /* Hidden behind timer */
+            30%, 70% { transform: translateY(-40%); } /* Peeking way up */
         }
 
         #timer {
-            background-color: rgba(0, 0, 0, 0.65);
+            background-color: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             padding: 40px 60px;
             border-radius: 30px;
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
             width: fit-content;
             max-width: 90%;
             position: relative;
             animation: heartbeat 2s infinite ease-in-out;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            z-index: 2; /* In front of Snoopy */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 3; /* Layer 3: Front (In front of Snoopy) */
         }
 
         @keyframes heartbeat {
@@ -82,28 +82,28 @@
             opacity: 0.9;
         }
 
-        /* Floating Hearts */
+        /* Floating Hearts Layer */
         .heart {
             position: absolute;
             color: #ffb6c1;
-            font-size: 24px;
+            font-size: 28px;
             user-select: none;
             pointer-events: none;
             animation: floatUp 4s linear forwards;
-            z-index: 5; /* In front of everything */
+            z-index: 4; /* Layer 4: Very Front */
         }
 
         @keyframes floatUp {
             0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-300px) scale(1.5); opacity: 0; }
+            100% { transform: translateY(-350px) scale(1.6); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div id="container">
-        <!-- Direct Snoopy Image Link -->
-        <img id="snoopy-peeker" src="https://i.giphy.com" alt="Snoopy">
+        <!-- Optimized Peeking Snoopy -->
+        <img id="snoopy-peeker" src="https://media.giphy.com" alt="Snoopy">
         
         <div id="timer">
             <h2 id="time">00d 00h 00m 00s</h2>
