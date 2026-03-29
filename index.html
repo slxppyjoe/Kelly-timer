@@ -17,7 +17,7 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            padding-bottom: 40px;
+            padding-bottom: 60px; /* Space for the box at the bottom */
         }
 
         #container {
@@ -25,23 +25,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Creates a new stacking context for children */
             z-index: 1; 
         }
 
-        /* Snoopy: Bigger and strictly layered */
+        /* Peeking Snoopy */
         #snoopy-peeker {
-            width: 180px; 
+            width: 160px; 
             position: absolute;
-            bottom: 40px; /* Aligned with the top of the timer */
-            z-index: 2; /* Layer 2: Middle (Behind text, in front of photo) */
+            top: 0; /* Aligned to the top of the timer */
+            z-index: 1; /* Layered behind the timer box */
             animation: peekaboo 6s infinite ease-in-out;
             pointer-events: none;
         }
 
         @keyframes peekaboo {
-            0%, 15%, 85%, 100% { transform: translateY(110%); } /* Hidden behind timer */
-            30%, 70% { transform: translateY(-40%); } /* Peeking way up */
+            0%, 15%, 85%, 100% { transform: translateY(0); } /* Hidden behind the box */
+            30%, 70% { transform: translateY(-90%); } /* Peeking way up */
         }
 
         #timer {
@@ -56,7 +55,7 @@
             position: relative;
             animation: heartbeat 2s infinite ease-in-out;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 3; /* Layer 3: Front (In front of Snoopy) */
+            z-index: 2; /* In front of Snoopy */
         }
 
         @keyframes heartbeat {
@@ -90,20 +89,20 @@
             user-select: none;
             pointer-events: none;
             animation: floatUp 4s linear forwards;
-            z-index: 4; /* Layer 4: Very Front */
+            z-index: 4; 
         }
 
         @keyframes floatUp {
             0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-350px) scale(1.6); opacity: 0; }
+            100% { transform: translateY(-400px) scale(1.6); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div id="container">
-        <!-- Optimized Peeking Snoopy -->
-        <img id="snoopy-peeker" src="https://media.giphy.com" alt="Snoopy">
+        <!-- Make sure "snoopy.gif" is uploaded to your GitHub folder! -->
+        <img id="snoopy-peeker" src="snoopy.gif" alt="Snoopy">
         
         <div id="timer">
             <h2 id="time">00d 00h 00m 00s</h2>
