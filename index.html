@@ -6,18 +6,20 @@
     <title>Our Journey</title>
     <style>
         body {
-            /* Updated to your new image filename */
-            background: url('Kelly_and_me2.jpg') no-repeat center center fixed;
+            background: url('kelly_and_me2.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
             text-align: center;
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
+            /* Changed from center to flex-end to move it to the bottom */
+            align-items: flex-end; 
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            /* Adds some breathing room from the bottom edge */
+            padding-bottom: 50px; 
         }
 
         #timer {
@@ -29,12 +31,9 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             width: fit-content;
             max-width: 90%;
-            
-            /* The Heartbeat Animation */
             animation: heartbeat 1.5s infinite ease-in-out;
         }
 
-        /* Defining the pulse effect */
         @keyframes heartbeat {
             0% { transform: scale(1); }
             50% { transform: scale(1.02); box-shadow: 0 10px 50px rgba(255, 255, 255, 0.15); }
@@ -73,7 +72,6 @@
             const now = new Date();
             let distance = now - startDate;
 
-            // DST Correction: Keeps the hours consistent between seasons
             const offsetNow = now.getTimezoneOffset();
             const offsetStart = startDate.getTimezoneOffset();
             const dstAdjustment = (offsetNow - offsetStart) * 60 * 1000;
@@ -84,7 +82,6 @@
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Leading zeros for layout stability
             const h = hours.toString().padStart(2, '0');
             const m = minutes.toString().padStart(2, '0');
             const s = seconds.toString().padStart(2, '0');
