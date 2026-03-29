@@ -10,51 +10,67 @@
             background-size: cover;
             color: white;
             text-align: center;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
-            /* Changed from center to flex-end to move it to the bottom */
             align-items: flex-end; 
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            /* Adds some breathing room from the bottom edge */
             padding-bottom: 50px; 
         }
 
         #timer {
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 40px;
-            border-radius: 20px;
+            border-radius: 30px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             width: fit-content;
             max-width: 90%;
-            animation: heartbeat 1.5s infinite ease-in-out;
+            position: relative; /* Needed for floating hearts */
+            animation: heartbeat 2s infinite ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @keyframes heartbeat {
             0% { transform: scale(1); }
-            50% { transform: scale(1.02); box-shadow: 0 10px 50px rgba(255, 255, 255, 0.15); }
+            50% { transform: scale(1.015); box-shadow: 0 10px 50px rgba(255, 182, 193, 0.2); }
             100% { transform: scale(1); }
         }
 
         #time {
             font-size: clamp(1.8rem, 8vw, 4rem); 
-            font-weight: bold;
+            font-weight: 700;
             margin: 0;
             white-space: nowrap; 
             letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
 
         p {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-top: 15px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            opacity: 0.9;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* Floating Heart Styles */
+        .heart {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.7);
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            animation: floatUp 4s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-150px) scale(1.5); opacity: 0; }
         }
     </style>
 </head>
@@ -72,6 +88,7 @@
             const now = new Date();
             let distance = now - startDate;
 
+            // DST Correction
             const offsetNow = now.getTimezoneOffset();
             const offsetStart = startDate.getTimezoneOffset();
             const dstAdjustment = (offsetNow - offsetStart) * 60 * 1000;
@@ -87,6 +104,24 @@
             const s = seconds.toString().padStart(2, '0');
 
             document.getElementById('time').innerHTML = `${days}d ${h}h ${m}m ${s}s`;
+
+            // Romantic addition: Create a floating heart every 2 seconds
+            if (seconds % 2 === 0 && !document.querySelector(`.heart-s-${seconds}`)) {
+                createHeart(seconds);
+            }
+        }
+
+        function createHeart(id) {
+            const timer = document.getElementById('timer');
+            const heart = document.createElement('div');
+            heart.classList.add('heart', `heart-s-${id}`);
+            heart.innerHTML = '❤';
+            // Randomly position heart across the width of the box
+            heart.style.left = Math.random() * 80 + 10 + '%';
+            timer.appendChild(heart);
+            
+            // Clean up heart after animation ends
+            setTimeout(() => heart.remove(), 4000);
         }
 
         setInterval(updateTimer, 1000);
