@@ -12,7 +12,6 @@
             text-align: center;
             font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -21,13 +20,13 @@
         }
         #timer {
             background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            padding: 35px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             width: fit-content;
-            max-width: 95%;
-            margin-bottom: 25px;
+            max-width: 90%;
         }
         #time {
             font-size: clamp(1.8rem, 8vw, 4rem); 
@@ -35,6 +34,7 @@
             margin: 0;
             white-space: nowrap; 
             letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         p {
             font-size: 1.2rem;
@@ -42,14 +42,6 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             opacity: 0.9;
-        }
-        .debug-info {
-            font-size: 0.8rem;
-            opacity: 0.6;
-            background: rgba(0,0,0,0.5);
-            padding: 12px 20px;
-            border-radius: 10px;
-            line-height: 1.6;
         }
     </style>
 </head>
@@ -60,46 +52,29 @@
         <p>Since we started dating</p>
     </div>
 
-    <!-- Debug section to verify the clocks -->
-    <div class="debug-info">
-        <div><strong>Now:</strong> <span id="current-now"></span></div>
-        <div><strong>Start:</strong> <span id="start-debug"></span></div>
-    </div>
-
     <script>
-        // Use the string format to ensure the browser reads it as local time
         const startDate = new Date("December 15, 2025 19:20:00");
 
         function updateTimer() {
             const now = new Date();
             
-            // Update debug text
-            document.getElementById('current-now').innerText = now.toLocaleString();
-            document.getElementById('start-debug').innerText = startDate.toLocaleString();
-
-            // 1. Calculate raw millisecond difference
+            // Calculate millisecond difference
             let distance = now - startDate;
 
-            /**
-             * 2. THE FIX: Account for Daylight Saving Time (DST)
-             * We calculate the difference between the timezone offset of 'now' (March)
-             * and the timezone offset of the 'startDate' (December).
-             * This prevents the "extra hour" added by the Spring Forward clock change.
-             */
-            const offsetNow = now.getTimezoneOffset(); // e.g., 240 mins (EDT)
-            const offsetStart = startDate.getTimezoneOffset(); // e.g., 300 mins (EST)
+            // DST Correction: Adjusts for the 1-hour shift between seasons
+            const offsetNow = now.getTimezoneOffset();
+            const offsetStart = startDate.getTimezoneOffset();
             const dstAdjustment = (offsetNow - offsetStart) * 60 * 1000;
-
-            // Apply the correction
+            
             distance -= dstAdjustment;
 
-            // 3. Convert to time units
+            // Unit conversion
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // 4. Pad numbers to keep the layout stable on one line
+            // Leading zeros for layout stability
             const h = hours.toString().padStart(2, '0');
             const m = minutes.toString().padStart(2, '0');
             const s = seconds.toString().padStart(2, '0');
@@ -107,7 +82,6 @@
             document.getElementById('time').innerHTML = `${days}d ${h}h ${m}m ${s}s`;
         }
 
-        // Refresh every second
         setInterval(updateTimer, 1000);
         updateTimer();
     </script>
