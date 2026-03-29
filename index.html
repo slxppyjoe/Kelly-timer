@@ -6,7 +6,8 @@
     <title>Our Journey</title>
     <style>
         body {
-            background: url('Kelly_and_me.jpg') no-repeat center center fixed;
+            /* Updated to your new image filename */
+            background: url('kelly_and_me2.jpg') no-repeat center center fixed;
             background-size: cover;
             color: white;
             text-align: center;
@@ -30,14 +31,14 @@
             max-width: 90%;
             
             /* The Heartbeat Animation */
-            animation: heartbeat 1s infinite ease-in-out;
+            animation: heartbeat 1.5s infinite ease-in-out;
         }
 
         /* Defining the pulse effect */
         @keyframes heartbeat {
-            0% { transform: scale(1); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
-            50% { transform: scale(1.02); box-shadow: 0 10px 50px rgba(255, 255, 255, 0.2); }
-            100% { transform: scale(1); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 10px 50px rgba(255, 255, 255, 0.15); }
+            100% { transform: scale(1); }
         }
 
         #time {
@@ -72,7 +73,7 @@
             const now = new Date();
             let distance = now - startDate;
 
-            // DST Correction
+            // DST Correction: Keeps the hours consistent between seasons
             const offsetNow = now.getTimezoneOffset();
             const offsetStart = startDate.getTimezoneOffset();
             const dstAdjustment = (offsetNow - offsetStart) * 60 * 1000;
@@ -83,6 +84,7 @@
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+            // Leading zeros for layout stability
             const h = hours.toString().padStart(2, '0');
             const m = minutes.toString().padStart(2, '0');
             const s = seconds.toString().padStart(2, '0');
