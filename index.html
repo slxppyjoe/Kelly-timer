@@ -3,50 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelly Timer</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Count-Up Timer</title>
     <style>
         body {
             background-image: url('Kelly_and_me.jpg');
             background-size: cover;
+            background-attachment: fixed;
             color: white;
+            text-align: center;
             font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             margin: 0;
         }
-        .timer {
-            display: flex;
-            gap: 20px;
-            font-size: 2.5em;
-            text-align: center;
+
+        #timer {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
-        .time-unit {
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
+
+        #time {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 2px;
         }
-        .since {
-            margin-top: 20px;
+
+        #timer p {
             font-size: 1.5em;
-            text-align: center;
+            margin-top: 20px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
-    <div class="timer">
-        <div class="time-unit" id="days">00</div><span>Days</span>
-        <div class="time-unit" id="hours">00</div><span>Hours</span>
-        <div class="time-unit" id="minutes">00</div><span>Minutes</span>
-        <div class="time-unit" id="seconds">00</div><span>Seconds</span>
+    <div id="timer">
+        <h2 id="time"></h2>
+        <p>Since we started dating</p>
     </div>
-    <div class="since">Since we started dating</div>
     <script>
-        // Timer logic here
+        const startDate = new Date('2025-12-15T19:20:00');
+        function updateTimer() {
+            const now = new Date();
+            const distance = now - startDate;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('time').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
     </script>
 </body>
 </html>
