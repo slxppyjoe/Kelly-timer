@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Our Journey</title>
     <style>
         body {
@@ -12,59 +12,37 @@
             color: white;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* The Blurred Background (fills the whole screen) */
-        .bg-blur {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('Kelly_and_me2.jpg') no-repeat center center;
-            background-size: cover;
-            filter: blur(25px) brightness(0.4);
-            z-index: -2;
-            transform: scale(1.1); /* Prevents white edges */
-        }
-
-        /* The Chrome-Proof Frame */
-        #photo-frame {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            height: 100dvh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            z-index: -1;
-            padding: 10px; /* Small buffer so it never touches the window edge */
-            box-sizing: border-box;
+            align-items: flex-end;
+            overflow: hidden;
+            /* Allow clicking for hearts */
+            touch-action: manipulation;
+        }
+
+        /* Background Layers */
+        .bg-blur {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('Kelly_and_me2.jpg') no-repeat center center;
+            background-size: cover;
+            filter: blur(20px) brightness(0.4);
+            z-index: -2;
+            transform: scale(1.1);
         }
 
         #bg-main {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain; /* Keeps the whole photo visible */
-            border-radius: 10px; /* Optional: gives it a slight rounded look in the frame */
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            object-fit: contain;
+            object-position: center;
         }
 
-        /* If window is wider than it is tall (Landscape/Desktop) */
-        @media (min-aspect-ratio: 1/1) {
-            #bg-main {
-                object-fit: cover;
-                width: 100%;
-                height: 100%;
-                border-radius: 0;
-            }
-            #photo-frame { padding: 0; }
+        @media (orientation: landscape) {
+            #bg-main { object-fit: cover; }
+            .bg-blur { display: none; }
         }
 
         #container {
@@ -73,12 +51,12 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            padding-bottom: 8vh;
+            padding-bottom: 8dvh;
             z-index: 1;
         }
 
         #snoopy-peeker {
-            width: 140px; 
+            width: 130px; 
             position: absolute;
             top: 0;
             z-index: 1;
@@ -89,82 +67,107 @@
         }
 
         @keyframes peekaboo {
-            0%, 15%, 85%, 100% { transform: translateY(0); }
-            30%, 70% { transform: translateY(-85%); }
+            0%, 15%, 85%, 100% { transform: translateY(0) translateZ(0); }
+            30%, 70% { transform: translateY(-85%) translateZ(0); }
         }
 
+        /* 1. Glassmorphism Design */
         #timer {
-            background-color: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 25px 35px;
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            padding: 25px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             width: fit-content;
             max-width: 85%;
             z-index: 2;
             animation: heartbeat 2s infinite ease-in-out;
+            text-align: center;
+        }
+
+        /* 3 & 5. Tabular Numbers + Gradient Text */
+        #time {
+            font-size: clamp(1.4rem, 6.5vw, 3.5rem);
+            font-weight: 800;
+            margin: 0;
+            font-variant-numeric: tabular-nums; /* Prevents jumping numbers */
+            letter-spacing: -1px;
+            background: linear-gradient(to bottom, #ffffff, #ffd1dc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none; /* Removed shadow to let gradient shine */
+        }
+
+        p {
+            font-size: 0.8rem;
+            margin: 8px 0 0 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        #milestone {
+            font-size: 0.85rem;
+            color: #ffb6c1;
+            margin-top: 12px;
+            font-weight: 600;
+            font-style: italic;
+            min-height: 1.2em;
+        }
+
+        /* 4. Interactive Hearts Styles */
+        .heart {
+            position: fixed; /* Changed to fixed for tap-anywhere hearts */
+            color: #ffb6c1;
+            font-size: 28px;
+            pointer-events: none;
+            animation: floatUp 3s ease-out forwards;
+            z-index: 99;
+            text-shadow: 0 0 10px rgba(255,182,193,0.5);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -200px) scale(1.8); opacity: 0; }
         }
 
         @keyframes heartbeat {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.01); }
-        }
-
-        #time {
-            font-size: clamp(1.4rem, 6.5vw, 3.5rem);
-            font-weight: 700;
-            margin: 0;
-            letter-spacing: -0.5px;
-        }
-
-        p {
-            font-size: 0.85rem;
-            margin-top: 8px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
-
-        .heart {
-            position: absolute;
-            color: #ffb6c1;
-            font-size: 24px;
-            pointer-events: none;
-            animation: floatUp 4s linear forwards;
-            z-index: 4;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-300px) scale(1.5); opacity: 0; }
+            50% { transform: scale(1.02); }
         }
     </style>
 </head>
 <body>
 
     <div class="bg-blur"></div>
-    
-    <div id="photo-frame">
-        <img id="bg-main" src="Kelly_and_me2.jpg" alt="Background">
-    </div>
+    <img id="bg-main" src="Kelly_and_me2.jpg" alt="Background">
 
     <div id="container">
         <img id="snoopy-peeker" src="snoopy.gif" alt="Snoopy">
         <div id="timer">
             <h2 id="time">00d 00h 00m 00s</h2>
-            <p>Since we started dating</p>
+            <p>Our Journey Together</p>
+            <div id="milestone"></div>
         </div>
     </div>
 
     <script>
         const startDate = new Date("December 15, 2025 19:20:00");
+        const milestones = [
+            "Every second is better with you",
+            "My favorite adventure",
+            "Still the one",
+            "Better together",
+            "I love you more than Snoopy loves Joe Cool"
+        ];
 
         function updateTimer() {
             const now = new Date();
             let distance = now - startDate;
 
+            // DST Adjustment
             const offsetNow = now.getTimezoneOffset();
             const offsetStart = startDate.getTimezoneOffset();
             const dstAdjustment = (offsetNow - offsetStart) * 60 * 1000;
@@ -177,21 +180,28 @@
 
             document.getElementById('time').innerHTML = 
                 `${days}d ${hours.toString().padStart(2,'0')}h ${minutes.toString().padStart(2,'0')}m ${seconds.toString().padStart(2,'0')}s`;
-
-            if (seconds % 2 === 0 && !document.querySelector(`.heart-s-${seconds}`)) {
-                createHeart(seconds);
-            }
+            
+            // Milestone Rotation (changes every 5 seconds)
+            const milestoneIndex = Math.floor(now.getTime() / 5000) % milestones.length;
+            document.getElementById('milestone').innerText = milestones[milestoneIndex];
         }
 
-        function createHeart(id) {
-            const container = document.getElementById('container');
+        // 4. Tap/Click for hearts
+        function spawnHeart(x, y) {
             const heart = document.createElement('div');
-            heart.classList.add('heart', `heart-s-${id}`);
+            heart.classList.add('heart');
             heart.innerHTML = '❤';
-            heart.style.left = Math.random() * 80 + 10 + '%';
-            container.appendChild(heart);
-            setTimeout(() => heart.remove(), 4000);
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
         }
+
+        document.addEventListener('mousedown', (e) => spawnHeart(e.clientX, e.clientY));
+        // Support for mobile taps
+        document.addEventListener('touchstart', (e) => {
+            spawnHeart(e.touches[0].clientX, e.touches[0].clientY);
+        });
 
         setInterval(updateTimer, 1000);
         updateTimer();
