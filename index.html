@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Our Journey</title>
+    <title>Us</title>
     <style>
         body {
             margin: 0;
@@ -17,7 +17,6 @@
             justify-content: center;
             align-items: flex-end;
             overflow: hidden;
-            /* Allow clicking for hearts */
             touch-action: manipulation;
         }
 
@@ -71,7 +70,7 @@
             30%, 70% { transform: translateY(-85%) translateZ(0); }
         }
 
-        /* 1. Glassmorphism Design */
+        /* Glassmorphism Design */
         #timer {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px) saturate(160%);
@@ -87,17 +86,16 @@
             text-align: center;
         }
 
-        /* 3 & 5. Tabular Numbers + Gradient Text */
+        /* Tabular Numbers + Gradient Text */
         #time {
             font-size: clamp(1.4rem, 6.5vw, 3.5rem);
             font-weight: 800;
             margin: 0;
-            font-variant-numeric: tabular-nums; /* Prevents jumping numbers */
+            font-variant-numeric: tabular-nums;
             letter-spacing: -1px;
             background: linear-gradient(to bottom, #ffffff, #ffd1dc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: none; /* Removed shadow to let gradient shine */
         }
 
         p {
@@ -117,9 +115,9 @@
             min-height: 1.2em;
         }
 
-        /* 4. Interactive Hearts Styles */
+        /* Interactive Hearts Styles */
         .heart {
-            position: fixed; /* Changed to fixed for tap-anywhere hearts */
+            position: fixed;
             color: #ffb6c1;
             font-size: 28px;
             pointer-events: none;
@@ -148,7 +146,7 @@
         <img id="snoopy-peeker" src="snoopy.gif" alt="Snoopy">
         <div id="timer">
             <h2 id="time">00d 00h 00m 00s</h2>
-            <p>Our Journey Together</p>
+            <p>since we've been dating</p>
             <div id="milestone"></div>
         </div>
     </div>
@@ -160,14 +158,14 @@
             "My favorite adventure",
             "Still the one",
             "Better together",
-            "I love you more than Snoopy loves Joe Cool"
+            "A pewwwwwppp",
+            "Easter Easter Easter!!!"
         ];
 
         function updateTimer() {
             const now = new Date();
             let distance = now - startDate;
 
-            // DST Adjustment
             const offsetNow = now.getTimezoneOffset();
             const offsetStart = startDate.getTimezoneOffset();
             const dstAdjustment = (offsetNow - offsetStart) * 60 * 1000;
@@ -181,12 +179,10 @@
             document.getElementById('time').innerHTML = 
                 `${days}d ${hours.toString().padStart(2,'0')}h ${minutes.toString().padStart(2,'0')}m ${seconds.toString().padStart(2,'0')}s`;
             
-            // Milestone Rotation (changes every 5 seconds)
             const milestoneIndex = Math.floor(now.getTime() / 5000) % milestones.length;
             document.getElementById('milestone').innerText = milestones[milestoneIndex];
         }
 
-        // 4. Tap/Click for hearts
         function spawnHeart(x, y) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
@@ -198,7 +194,6 @@
         }
 
         document.addEventListener('mousedown', (e) => spawnHeart(e.clientX, e.clientY));
-        // Support for mobile taps
         document.addEventListener('touchstart', (e) => {
             spawnHeart(e.touches[0].clientX, e.touches[0].clientY);
         });
