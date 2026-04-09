@@ -70,7 +70,6 @@
             30%, 70% { transform: translateY(-85%) translateZ(0); }
         }
 
-        /* Glassmorphism Design */
         #timer {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px) saturate(160%);
@@ -86,7 +85,6 @@
             text-align: center;
         }
 
-        /* Tabular Numbers + Gradient Text */
         #time {
             font-size: clamp(1.4rem, 6.5vw, 3.5rem);
             font-weight: 800;
@@ -115,7 +113,6 @@
             min-height: 1.2em;
         }
 
-        /* Interactive Hearts Styles */
         .heart {
             position: fixed;
             color: #ffb6c1;
@@ -153,13 +150,15 @@
 
     <script>
         const startDate = new Date("December 15, 2025 19:20:00");
+        
+        // Milestones ordered specifically by your request
         const milestones = [
-            "Every second is better with you",
-            "My favorite adventure",
-            "Still the one",
-            "Better together",
-            "A pewwwwwppp",
-            "Easter Easter Easter!!!"
+            "Every second is better with you", // Start with this
+            "My favorite adventure",           // Another cute
+            "Easter Easter Easter!!!",          // Easter
+            "Better together",                  // Another cute
+            "A pewwwwwppp",                     // A poop
+            "Still the one"                     // Finish off with rest
         ];
 
         function updateTimer() {
@@ -179,6 +178,7 @@
             document.getElementById('time').innerHTML = 
                 `${days}d ${hours.toString().padStart(2,'0')}h ${minutes.toString().padStart(2,'0')}m ${seconds.toString().padStart(2,'0')}s`;
             
+            // Cycles through the list in order, changing every 5 seconds
             const milestoneIndex = Math.floor(now.getTime() / 5000) % milestones.length;
             document.getElementById('milestone').innerText = milestones[milestoneIndex];
         }
