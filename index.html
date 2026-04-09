@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Our Journey</title>
     <style>
         body {
@@ -11,16 +11,15 @@
             background-color: #000;
             color: white;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            /* Use dvh for better mobile support */
             height: 100vh;
-            height: 100dvh; 
             display: flex;
-            justify-content: center;
-            align-items: flex-end;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
             overflow: hidden;
         }
 
-        /* The Blurred Background */
+        /* The Blurred Background (fills the whole screen) */
         .bg-blur {
             position: fixed;
             top: 0;
@@ -30,33 +29,42 @@
             background: url('Kelly_and_me2.jpg') no-repeat center center;
             background-size: cover;
             filter: blur(25px) brightness(0.4);
-            transform: scale(1.1);
             z-index: -2;
+            transform: scale(1.1); /* Prevents white edges */
         }
 
-        /* The Main Photo with a "Safe Zone" buffer */
-        #bg-main {
+        /* The Chrome-Proof Frame */
+        #photo-frame {
             position: fixed;
             top: 0;
             left: 0;
-            /* Using calc to ensure a small gap so edges never touch the screen */
-            width: calc(100% - 10px); 
-            height: calc(100% - 10px);
-            margin: 5px; /* Center the image in the gap */
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             z-index: -1;
-            object-fit: contain;
-            object-position: center;
+            padding: 10px; /* Small buffer so it never touches the window edge */
             box-sizing: border-box;
         }
 
-        @media (orientation: landscape) {
-            #bg-main { 
-                object-fit: cover; 
+        #bg-main {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Keeps the whole photo visible */
+            border-radius: 10px; /* Optional: gives it a slight rounded look in the frame */
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* If window is wider than it is tall (Landscape/Desktop) */
+        @media (min-aspect-ratio: 1/1) {
+            #bg-main {
+                object-fit: cover;
                 width: 100%;
                 height: 100%;
-                margin: 0;
+                border-radius: 0;
             }
-            .bg-blur { display: none; }
+            #photo-frame { padding: 0; }
         }
 
         #container {
@@ -65,7 +73,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            padding-bottom: 8dvh;
+            padding-bottom: 8vh;
             z-index: 1;
         }
 
@@ -81,8 +89,8 @@
         }
 
         @keyframes peekaboo {
-            0%, 15%, 85%, 100% { transform: translateY(0) translateZ(0); }
-            30%, 70% { transform: translateY(-85%) translateZ(0); }
+            0%, 15%, 85%, 100% { transform: translateY(0); }
+            30%, 70% { transform: translateY(-85%); }
         }
 
         #timer {
@@ -137,7 +145,10 @@
 <body>
 
     <div class="bg-blur"></div>
-    <img id="bg-main" src="Kelly_and_me2.jpg" alt="Background">
+    
+    <div id="photo-frame">
+        <img id="bg-main" src="Kelly_and_me2.jpg" alt="Background">
+    </div>
 
     <div id="container">
         <img id="snoopy-peeker" src="snoopy.gif" alt="Snoopy">
