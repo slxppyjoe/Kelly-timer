@@ -17,6 +17,9 @@
             justify-content: center;
             align-items: flex-end;
             overflow: hidden;
+            /* Prevents long-press text selection/menus on mobile */
+            -webkit-user-select: none;
+            user-select: none;
             touch-action: manipulation;
         }
 
@@ -85,6 +88,8 @@
             animation: heartbeat 2s infinite ease-in-out;
             text-align: center;
             cursor: pointer;
+            /* Ensure text inside doesn't trigger tap-prevention logic */
+            pointer-events: auto; 
         }
 
         /* Shimmering Gradient Text */
@@ -94,8 +99,6 @@
             margin: 0;
             font-variant-numeric: tabular-nums;
             letter-spacing: -1px;
-            
-            /* Shimmer Animation */
             background: linear-gradient(90deg, #ffffff, #ffd1dc, #ffffff, #ffd1dc, #ffffff);
             background-size: 200% auto;
             -webkit-background-clip: text;
@@ -136,8 +139,10 @@
         }
 
         @keyframes floatUp {
+            /* Spawns exactly at the finger center */
             0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -200px) scale(1.8); opacity: 0; }
+            /* Drifts slightly sideways as it rises */
+            100% { transform: translate(var(--side-drift), -250px) scale(1.8); opacity: 0; }
         }
 
         @keyframes heartbeat {
@@ -163,6 +168,10 @@
     <script>
         const startDate = new Date("December 15, 2025 19:20:00");
         let displayMode = 0; 
+        
+        // Variables for Heart Hold Logic
+        let heartInterval;
+        let lastTouchX, lastTouchY;
 
         const milestones = [
             "Every second is better with you",
@@ -215,23 +224,89 @@
             document.getElementById('milestone').innerText = milestones[milestoneIndex];
         }
 
+        // --- NEW HEART SPAWN LOGIC (Hold to Burst) ---
         function spawnHeart(x, y) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
             heart.innerHTML = '❤';
             heart.style.left = x + 'px';
             heart.style.top = y + 'px';
+            
+            // Add a random sideways drift to the animation
+            const drift = (Math.random() - 0.5) * 100 + 'px'; // -50px to 50px
+            heart.style.setProperty('--side-drift', drift);
+            
+            // Randomize color slightly (shades of pink)
+            const colors = ['#ffb6c1', '#ffd1dc', '#ffc0cb', '#ffe4e1'];
+            heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 3000);
         }
 
+        function startHeartBurst(x, y) {
+            // Spawn immediate initial heart
+            spawnHeart(x, y); 
+            // Update last known position for continuous burst
+            lastTouchX = x;
+            lastTouchY = y;
+            
+            // Start interval to spawn more hearts (every 100ms)
+            if (heartInterval) clearInterval(heartInterval);
+            heartInterval = setInterval(() => {
+                // Introduce a tiny variance in position for a natural look
+                const vx = lastTouchX + (Math.random() - 0.5) * 10;
+                const vy = lastTouchY + (Math.random() - 0.5) * 10;
+                spawnHeart(vx, vy);
+            }, 100); 
+        }
+
+        function stopHeartBurst() {
+            clearInterval(heartInterval);
+            heartInterval = null;
+        }
+
+        // Detect if click/tap is on the timer box
+        function isClickingTimer(e) {
+            return e.target.closest('#timer');
+        }
+
+        // Desktop Events
         document.addEventListener('mousedown', (e) => {
-            if (!e.target.closest('#timer')) spawnHeart(e.clientX, e.clientY);
+            if (!isClickingTimer(e)) {
+                startHeartBurst(e.clientX, e.clientY);
+            }
         });
-        
+        document.addEventListener('mouseup', stopHeartBurst);
+        document.addEventListener('mousemove', (e) => {
+            if (heartInterval) {
+                lastTouchX = e.clientX;
+                lastTouchY = e.clientY;
+            }
+        });
+
+        // Mobile Events
         document.addEventListener('touchstart', (e) => {
-            if (!e.target.closest('#timer')) spawnHeart(e.touches[0].clientX, e.touches[0].clientY);
+            if (!isClickingTimer(e)) {
+                // Small delay to ensure it's not just a quick tap
+                setTimeout(() => {
+                    // Check if finger is still down before bursting
+                    if (e.touches.length > 0) { 
+                        startHeartBurst(e.touches[0].clientX, e.touches[0].clientY);
+                    }
+                }, 150); 
+            }
         });
+        document.addEventListener('touchend', stopHeartBurst);
+        document.addEventListener('touchmove', (e) => {
+            if (heartInterval) {
+                lastTouchX = e.touches[0].clientX;
+                lastTouchY = e.touches[0].clientY;
+            }
+        });
+
+        // Global safeguard: Stop hearts if mouse leaves the window
+        document.addEventListener('mouseleave', stopHeartBurst);
 
         setInterval(updateTimer, 1000);
         updateTimer();
