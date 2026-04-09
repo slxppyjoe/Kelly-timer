@@ -6,7 +6,6 @@
     <title>My Favorite Script</title>
     <style>
         * {
-            /* Prevents the 'magnifying glass' and selection box on iOS */
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
         }
@@ -19,13 +18,11 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             height: 100%;
             width: 100%;
-            /* CRITICAL: Stops the 'rubber-band' bounce on iOS */
             overflow: hidden;
-            position: fixed;
-            touch-action: none; 
+            /* Restricted touch-action only where it matters */
+            touch-action: manipulation; 
         }
 
-        /* Background Layers */
         .bg-blur {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -49,7 +46,6 @@
             .bg-blur { display: none; }
         }
 
-        /* Fixed container prevents UI from moving during drags */
         #container {
             position: fixed;
             bottom: 0;
@@ -60,7 +56,6 @@
             align-items: center;
             padding-bottom: 8dvh;
             z-index: 1;
-            /* Extra safety to keep it pinned */
             pointer-events: none; 
         }
 
@@ -70,15 +65,12 @@
             top: 0;
             z-index: 1;
             pointer-events: none;
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
-            will-change: transform;
             animation: peekaboo 6s infinite ease-in-out;
         }
 
         @keyframes peekaboo {
-            0%, 15%, 85%, 100% { transform: translateY(0) translateZ(0); }
-            30%, 70% { transform: translateY(-85%) translateZ(0); }
+            0%, 15%, 85%, 100% { transform: translateY(0); }
+            30%, 70% { transform: translateY(-85%); }
         }
 
         #timer {
@@ -95,7 +87,7 @@
             animation: heartbeat 2s infinite ease-in-out;
             text-align: center;
             cursor: pointer;
-            pointer-events: auto; /* Allows only the timer box to be clicked */
+            pointer-events: auto; 
         }
 
         #time {
@@ -103,7 +95,6 @@
             font-weight: 800;
             margin: 0;
             font-variant-numeric: tabular-nums;
-            letter-spacing: -1px;
             background: linear-gradient(90deg, #ffffff, #ffd1dc, #ffffff, #ffd1dc, #ffffff);
             background-size: 200% auto;
             -webkit-background-clip: text;
@@ -122,6 +113,7 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             opacity: 0.7;
+            pointer-events: none;
         }
 
         #milestone {
@@ -131,6 +123,7 @@
             font-weight: 600;
             font-style: italic;
             min-height: 1.2em;
+            pointer-events: none;
         }
 
         .heart {
@@ -140,7 +133,6 @@
             pointer-events: none;
             animation: floatUp 3s ease-out forwards;
             z-index: 99;
-            text-shadow: 0 0 10px rgba(255,182,193,0.5);
         }
 
         @keyframes floatUp {
@@ -154,7 +146,7 @@
         }
     </style>
 </head>
-<body scroll="no">
+<body>
 
     <div class="bg-blur"></div>
     <img id="bg-main" src="Kelly_and_me2.jpg" alt="Background">
@@ -244,10 +236,10 @@
             lastTouchY = y;
             if (heartInterval) clearInterval(heartInterval);
             heartInterval = setInterval(() => {
-                const vx = lastTouchX + (Math.random() - 0.5) * 15;
-                const vy = lastTouchY + (Math.random() - 0.5) * 15;
+                const vx = lastTouchX + (Math.random() - 0.5) * 20;
+                const vy = lastTouchY + (Math.random() - 0.5) * 20;
                 spawnHeart(vx, vy);
-            }, 80); 
+            }, 70); 
         }
 
         function stopHeartBurst() {
@@ -255,27 +247,33 @@
             heartInterval = null;
         }
 
-        // Desktop Events
+        // --- Balanced Interaction Logic ---
+
         document.addEventListener('mousedown', (e) => {
             if (!e.target.closest('#timer')) startHeartBurst(e.clientX, e.clientY);
         });
-        document.addEventListener('mouseup', stopHeartBurst);
+
         document.addEventListener('mousemove', (e) => {
-            if (heartInterval) { lastTouchX = e.clientX; lastTouchY = e.clientY; }
+            if (heartInterval) {
+                lastTouchX = e.clientX;
+                lastTouchY = e.clientY;
+            }
         });
 
-        // Mobile Events
+        document.addEventListener('mouseup', stopHeartBurst);
+
         document.addEventListener('touchstart', (e) => {
             if (!e.target.closest('#timer')) {
-                // Prevent iOS default drag/zoom
-                e.preventDefault();
+                // ONLY prevent default if we are clicking on the "background"
+                // This stops the iOS bounce without killing the whole browser
+                if (e.cancelable) e.preventDefault();
                 startHeartBurst(e.touches[0].clientX, e.touches[0].clientY);
             }
-        }, { passive: false }); // CRITICAL: Allows e.preventDefault() to work
+        }, { passive: false });
 
         document.addEventListener('touchmove', (e) => {
             if (heartInterval) {
-                e.preventDefault();
+                if (e.cancelable) e.preventDefault();
                 lastTouchX = e.touches[0].clientX;
                 lastTouchY = e.touches[0].clientY;
             }
