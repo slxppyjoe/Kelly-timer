@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Us</title>
+    <title>My Favorite Script</title>
     <style>
         body {
             margin: 0;
@@ -84,7 +84,7 @@
             z-index: 2;
             animation: heartbeat 2s infinite ease-in-out;
             text-align: center;
-            cursor: pointer; /* Hint that it's clickable */
+            cursor: pointer;
         }
 
         /* Shimmering Gradient Text */
@@ -95,7 +95,7 @@
             font-variant-numeric: tabular-nums;
             letter-spacing: -1px;
             
-            /* Shimmer Effect */
+            /* Shimmer Animation */
             background: linear-gradient(90deg, #ffffff, #ffd1dc, #ffffff, #ffd1dc, #ffffff);
             background-size: 200% auto;
             -webkit-background-clip: text;
@@ -162,7 +162,7 @@
 
     <script>
         const startDate = new Date("December 15, 2025 19:20:00");
-        let displayMode = 0; // 0: Standard, 1: Seconds, 2: Minutes, 3: Hours
+        let displayMode = 0; 
 
         const milestones = [
             "Every second is better with you",
@@ -175,7 +175,7 @@
 
         function cycleUnits() {
             displayMode = (displayMode + 1) % 4;
-            updateTimer(); // Update immediately on click
+            updateTimer(); 
         }
 
         function updateTimer() {
@@ -191,7 +191,6 @@
             const labelEl = document.getElementById('label');
 
             if (displayMode === 0) {
-                // Standard Mode
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -199,17 +198,14 @@
                 timeEl.innerHTML = `${days}d ${hours.toString().padStart(2,'0')}h ${minutes.toString().padStart(2,'0')}m ${seconds.toString().padStart(2,'0')}s`;
                 labelEl.innerHTML = "since we've been dating";
             } else if (displayMode === 1) {
-                // Total Seconds
                 const totalSecs = Math.floor(distance / 1000).toLocaleString();
                 timeEl.innerHTML = `${totalSecs}s`;
                 labelEl.innerHTML = "total seconds shared";
             } else if (displayMode === 2) {
-                // Total Minutes
                 const totalMins = Math.floor(distance / (1000 * 60)).toLocaleString();
                 timeEl.innerHTML = `${totalMins}m`;
                 labelEl.innerHTML = "total minutes shared";
             } else if (displayMode === 3) {
-                // Total Hours
                 const totalHours = Math.floor(distance / (1000 * 60 * 60)).toLocaleString();
                 timeEl.innerHTML = `${totalHours}h`;
                 labelEl.innerHTML = "total hours shared";
@@ -230,7 +226,6 @@
         }
 
         document.addEventListener('mousedown', (e) => {
-            // Only spawn heart if we didn't click the timer (to avoid overlap)
             if (!e.target.closest('#timer')) spawnHeart(e.clientX, e.clientY);
         });
         
