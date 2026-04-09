@@ -5,9 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Journey</title>
     <style>
-        body {
-            background: url('Kelly_and_me2.jpg') no-repeat center center fixed;
+        /* Fix for iOS Safari background issues */
+        #bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('Kelly_and_me2.jpg') no-repeat center center;
             background-size: cover;
+            z-index: -1;
+        }
+
+        body {
             color: white;
             text-align: center;
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -17,7 +27,8 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            padding-bottom: 60px; /* Space for the box at the bottom */
+            padding-bottom: 60px;
+            background-color: #000; /* fallback */
         }
 
         #container {
@@ -28,19 +39,23 @@
             z-index: 1; 
         }
 
-        /* Peeking Snoopy */
+        /* Peeking Snoopy with iOS Fixes */
         #snoopy-peeker {
             width: 160px; 
             position: absolute;
-            top: 0; /* Aligned to the top of the timer */
-            z-index: 1; /* Layered behind the timer box */
+            top: 0;
+            z-index: 1;
+            /* Force hardware acceleration and prevent sleep */
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            will-change: transform;
             animation: peekaboo 6s infinite ease-in-out;
             pointer-events: none;
         }
 
         @keyframes peekaboo {
-            0%, 15%, 85%, 100% { transform: translateY(0); } /* Hidden behind the box */
-            30%, 70% { transform: translateY(-90%); } /* Peeking way up */
+            0%, 15%, 85%, 100% { transform: translateY(0) translateZ(0); }
+            30%, 70% { transform: translateY(-90%) translateZ(0); }
         }
 
         #timer {
@@ -53,9 +68,10 @@
             width: fit-content;
             max-width: 90%;
             position: relative;
-            animation: heartbeat 2s infinite ease-in-out;
+            z-index: 2;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 2; /* In front of Snoopy */
+            animation: heartbeat 2s infinite ease-in-out;
+            will-change: transform;
         }
 
         @keyframes heartbeat {
@@ -81,7 +97,6 @@
             opacity: 0.9;
         }
 
-        /* Floating Hearts Layer */
         .heart {
             position: absolute;
             color: #ffb6c1;
@@ -100,8 +115,9 @@
 </head>
 <body>
 
+    <div id="bg-layer"></div>
+
     <div id="container">
-        <!-- Make sure "snoopy.gif" is uploaded to your GitHub folder! -->
         <img id="snoopy-peeker" src="snoopy.gif" alt="Snoopy">
         
         <div id="timer">
